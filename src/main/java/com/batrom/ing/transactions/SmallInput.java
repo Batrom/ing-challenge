@@ -1,8 +1,8 @@
-package com.batrom.ing.transactions2;
+package com.batrom.ing.transactions;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-public record SmallInput(Account[] accounts) implements Input {
+record SmallInput(Account[] accounts) implements Input {
 
     static Input fromJson(final ArrayNode node) {
         return new SmallInput(SmallInputJsonParser.read(node));

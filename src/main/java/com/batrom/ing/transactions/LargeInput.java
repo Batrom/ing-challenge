@@ -1,4 +1,4 @@
-package com.batrom.ing.transactions2;
+package com.batrom.ing.transactions;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
@@ -8,7 +8,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
-public record LargeInput(AccountBalanceChangesBucket[] buckets) implements Input {
+record LargeInput(List<AccountBalanceChangesBucket> buckets) implements Input {
 
     static final int NUMBER_OF_BUCKETS = 11;
 
@@ -41,7 +41,7 @@ public record LargeInput(AccountBalanceChangesBucket[] buckets) implements Input
     private List<Callable<Account[]>> getCallables() {
         final var callables = new ArrayList<Callable<Account[]>>(NUMBER_OF_BUCKETS);
         for (int i = 0; i < NUMBER_OF_BUCKETS; i++) {
-            callables.add(buckets[i].toAccountsCallable());
+            callables.add(buckets.get(i).toAccountsCallable());
         }
         return callables;
     }

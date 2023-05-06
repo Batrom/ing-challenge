@@ -1,19 +1,18 @@
 package com.batrom.ing.transactions;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Account implements Serializable {
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+class Account implements Serializable {
     private final String account;
     private int debitCount;
     private int creditCount;
-    private float balance;
+    private double balance;
 
-    Account(final String account) {
-        this.account = account;
-    }
-
-    Account(final String account, final int debitCount, final int creditCount, final float balance) {
+    Account(final String account, final int debitCount, final int creditCount, final double balance) {
         this.account = account;
         this.debitCount = debitCount;
         this.creditCount = creditCount;
@@ -24,24 +23,20 @@ public class Account implements Serializable {
         return account;
     }
 
-    static Account initializeWithDebit(final String accountNumber, final float amount) {
-        final var account = new Account(accountNumber);
-        account.updateDebit(amount);
-        return account;
+    static Account initializeWithDebit(final String accountNumber, final double balance) {
+        return new Account(accountNumber, 1, 0, balance);
     }
 
-    static Account initializeWithCredit(final String accountNumber, final float amount) {
-        final var account = new Account(accountNumber);
-        account.updateCredit(amount);
-        return account;
+    static Account initializeWithCredit(final String accountNumber, final double balance) {
+        return new Account(accountNumber, 0, 1, balance);
     }
 
-    void updateDebit(final float amount) {
+    void updateDebit(final double amount) {
         debitCount++;
-        balance -= amount;
+        balance += amount;
     }
 
-    void updateCredit(final float amount) {
+    void updateCredit(final double amount) {
         creditCount++;
         balance += amount;
     }

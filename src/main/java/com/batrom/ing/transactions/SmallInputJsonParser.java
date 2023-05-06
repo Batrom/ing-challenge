@@ -1,11 +1,11 @@
-package com.batrom.ing.transactions2;
+package com.batrom.ing.transactions;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.batrom.ing.transactions2.ParsingUtil.*;
+import static com.batrom.ing.transactions.ParsingUtil.*;
 
 class SmallInputJsonParser {
 
@@ -27,7 +27,7 @@ class SmallInputJsonParser {
         return toSortedArray(accountsMap);
     }
 
-    private static void updateCreditAccount(final Map<String, Account> accountsMap, final String accountNumber, final float amount) {
+    private static void updateCreditAccount(final Map<String, Account> accountsMap, final String accountNumber, final double amount) {
         final var account = accountsMap.get(accountNumber);
         if (account != null) {
             account.updateCredit(amount);
@@ -36,7 +36,7 @@ class SmallInputJsonParser {
         }
     }
 
-    private static void updateDebitAccount(final Map<String, Account> accountsMap, final String accountNumber, final float amount) {
+    private static void updateDebitAccount(final Map<String, Account> accountsMap, final String accountNumber, final double amount) {
         final var account = accountsMap.get(accountNumber);
         if (account != null) {
             account.updateDebit(amount);

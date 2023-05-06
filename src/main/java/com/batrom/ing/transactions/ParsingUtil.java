@@ -1,4 +1,4 @@
-package com.batrom.ing.transactions2;
+package com.batrom.ing.transactions;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -16,8 +16,8 @@ class ParsingUtil {
         return transaction.get("debitAccount").asText();
     }
 
-    static float extractAmount(final JsonNode transaction) {
-        return transaction.get("amount").floatValue();
+    static double extractAmount(final JsonNode transaction) {
+        return transaction.get("amount").doubleValue();
     }
 
     static Account[] toSortedArray(final Map<String, Account> accountsMap) {

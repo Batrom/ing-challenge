@@ -1,29 +1,42 @@
-package com.batrom.ing.transactions2;
+package com.batrom.ing.transactions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import static com.batrom.ing.transactions2.ParsingUtil.toSortedArray;
+import static com.batrom.ing.transactions.ParsingUtil.toSortedArray;
 
-class AccountBalanceChangesBucket extends ArrayList<AccountBalanceChange> {
+record AccountBalanceChangesBucket(List<AccountBalanceChange> changes) {
+
+    AccountBalanceChangesBucket() {
+        this(new ArrayList<>());
+    }
+
+    void add(final AccountBalanceChange change) {
+        changes.add(change);
+    }
+
+    void merge(final AccountBalanceChangesBucket bucket) {
+        changes.addAll(bucket.changes());
+    }
 
     Callable<Account[]> toAccountsCallable() {
         return this::toAccounts;
     }
 
     private Account[] toAccounts() {
-        if (!isEmpty()) {
+        if (!changes.isEmpty()) {
             final var accountsMap = new HashMap<String, Account>();
-            for (int i = 0; i < size(); i++) {
-                final var change = get(i);
+            for (int i = 0; i < changes.size(); i++) {
+                final var change = changes.get(i);
                 final var amount = change.amount();
 
                 if (change.amount() > 0) {
                     updateCreditAccount(change, amount, accountsMap);
                 } else if (change.amount() < 0) {
-                    updateDebitAccount(change, -amount, accountsMap);
+                    updateDebitAccount(change, amount, accountsMap);
                 }
             }
             return toSortedArray(accountsMap);
@@ -31,7 +44,7 @@ class AccountBalanceChangesBucket extends ArrayList<AccountBalanceChange> {
         return new Account[0];
     }
 
-    private static void updateCreditAccount(final AccountBalanceChange change, final Float amount, final Map<String, Account> accountsMap) {
+    private static void updateCreditAccount(final AccountBalanceChange change, final double amount, final Map<String, Account> accountsMap) {
         final var accountNumber = change.account();
         final var account = accountsMap.get(accountNumber);
         if (account != null) {
@@ -41,7 +54,7 @@ class AccountBalanceChangesBucket extends ArrayList<AccountBalanceChange> {
         }
     }
 
-    private static void updateDebitAccount(final AccountBalanceChange change, final Float amount, final Map<String, Account> accountsMap) {
+    private static void updateDebitAccount(final AccountBalanceChange change, final double amount, final Map<String, Account> accountsMap) {
         final var account = change.account();
         final var accountSummary = accountsMap.get(account);
         if (accountSummary != null) {
