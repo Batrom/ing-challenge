@@ -1,29 +1,28 @@
 package com.batrom.ing.transactions;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
 import static com.batrom.ing.transactions.LargeInput.NUMBER_OF_BUCKETS;
-import static com.batrom.ing.transactions.ParsingUtil.*;
+import static com.batrom.ing.transactions.TransactionsHelper.*;
 
 class LargeInputJsonParser {
 
-    static List<AccountBalanceChangesBucket> read(final ArrayNode node) {
+    static List<AccountBalanceChangesBucket> parse(final JsonNode node) {
         return StreamSupport.stream(node.spliterator(), true)
                 .collect(LargeInputJsonParser::initializeBuckets,
                         LargeInputJsonParser::addToBuckets,
                         LargeInputJsonParser::mergeBuckets);
     }
 
-    private static List<AccountBalanceChangesBucket> mergeBuckets(final List<AccountBalanceChangesBucket> buckets1, final List<AccountBalanceChangesBucket> buckets2) {
+    private static List<AccountBalanceChangesBucket> mergeBuckets(final List<AccountBalanceChangesBucket> buckets, final List<AccountBalanceChangesBucket> buckets2) {
         for (int i = 0; i < NUMBER_OF_BUCKETS; i++) {
-            buckets1.get(i).merge(buckets2.get(i));
+            buckets.get(i).merge(buckets2.get(i));
         }
-        return buckets1;
+        return buckets;
     }
 
     private static List<AccountBalanceChangesBucket> addToBuckets(final List<AccountBalanceChangesBucket> buckets, final JsonNode transaction) {

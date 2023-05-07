@@ -1,11 +1,11 @@
 package com.batrom.ing.transactions;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 record SmallInput(Account[] accounts) implements Input {
 
-    static Input fromJson(final ArrayNode node) {
-        return new SmallInput(SmallInputJsonParser.read(node));
+    static Input fromJson(final JsonNode node) {
+        return new SmallInput(SmallInputJsonParser.parse(node));
     }
 
     public Account[] toResponse() {

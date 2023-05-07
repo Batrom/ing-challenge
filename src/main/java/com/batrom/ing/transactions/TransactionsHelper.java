@@ -6,14 +6,16 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
 
-class ParsingUtil {
+class TransactionsHelper {
+
+    static final Account[] EMPTY_ACCOUNTS = new Account[0];
 
     static String extractCreditAccount(final JsonNode transaction) {
-        return transaction.get("creditAccount").asText();
+        return transaction.get("creditAccount").textValue();
     }
 
     static String extractDebitAccount(final JsonNode transaction) {
-        return transaction.get("debitAccount").asText();
+        return transaction.get("debitAccount").textValue();
     }
 
     static double extractAmount(final JsonNode transaction) {
@@ -21,7 +23,7 @@ class ParsingUtil {
     }
 
     static Account[] toSortedArray(final Map<String, Account> accountsMap) {
-        final var accounts = accountsMap.values().toArray(new Account[0]); //todo init with 0?
+        final var accounts = accountsMap.values().toArray(EMPTY_ACCOUNTS);
         Arrays.sort(accounts, Comparator.comparing(Account::getAccount));
         return accounts;
     }

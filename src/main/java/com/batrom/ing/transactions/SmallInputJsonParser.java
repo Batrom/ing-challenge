@@ -1,15 +1,15 @@
 package com.batrom.ing.transactions;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.batrom.ing.transactions.ParsingUtil.*;
+import static com.batrom.ing.transactions.TransactionsHelper.*;
 
 class SmallInputJsonParser {
 
-    static Account[] read(final ArrayNode node) {
+    static Account[] parse(final JsonNode node) {
         final var accountsMap = new HashMap<String, Account>();
 
         final var iterator = node.iterator();

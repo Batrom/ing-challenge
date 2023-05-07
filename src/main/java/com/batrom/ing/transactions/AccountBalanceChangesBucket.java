@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import static com.batrom.ing.transactions.ParsingUtil.toSortedArray;
+import static com.batrom.ing.transactions.TransactionsHelper.EMPTY_ACCOUNTS;
+import static com.batrom.ing.transactions.TransactionsHelper.toSortedArray;
 
 record AccountBalanceChangesBucket(List<AccountBalanceChange> changes) {
+
 
     AccountBalanceChangesBucket() {
         this(new ArrayList<>());
@@ -41,7 +43,7 @@ record AccountBalanceChangesBucket(List<AccountBalanceChange> changes) {
             }
             return toSortedArray(accountsMap);
         }
-        return new Account[0];
+        return EMPTY_ACCOUNTS;
     }
 
     private static void updateCreditAccount(final AccountBalanceChange change, final double amount, final Map<String, Account> accountsMap) {
