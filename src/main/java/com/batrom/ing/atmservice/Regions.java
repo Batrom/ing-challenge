@@ -4,7 +4,9 @@ import java.util.Arrays;
 
 class Regions {
 
-    private RequestTypesWithAtmIds[] data = new RequestTypesWithAtmIds[10];
+    private static final int MAX_REGION = 10_000;
+
+    private RequestTypesWithATMIds[] data = new RequestTypesWithATMIds[10];
 
     void add(final int region, final RequestType requestType, final int atmId) {
         growIfNecessary(region);
@@ -12,7 +14,7 @@ class Regions {
         if (regionData != null) {
             regionData.add(requestType, atmId);
         } else {
-            final var newRegionData = new RequestTypesWithAtmIds();
+            final var newRegionData = new RequestTypesWithATMIds();
             newRegionData.add(requestType, atmId);
             this.data[region] = newRegionData;
         }
@@ -24,55 +26,70 @@ class Regions {
             final var regionData = this.data[region];
             if (regionData == null) continue;
 
-            addToOrder(order, region, regionData.data[3],
-                    addToOrder(order, region, regionData.data[2],
-                            addToOrder(order, region, regionData.data[1],
-                                    addToOrder(order, region, regionData.data[0], 0))));
+            final var atmIdPresenceArray = new boolean[regionData.maxATMId() + 1];
+
+            addToOrder(order, region, regionData.data[0], atmIdPresenceArray);
+            addToOrder(order, region, regionData.data[1], atmIdPresenceArray);
+            addToOrder(order, region, regionData.data[2], atmIdPresenceArray);
+            addToOrder(order, region, regionData.data[3], atmIdPresenceArray);
+
         }
         return order;
     }
 
-    private static int addToOrder(final Order order, final int region, final AtmIds atmIds, int previousAtmId) {
-        if (atmIds == null) return previousAtmId;
+    private static void addToOrder(final Order order, final int region, final ATMIds atmIds, final boolean[] atmIdPresenceArray) {
+        if (atmIds == null) return;
 
         final var atmIdsData = atmIds.data;
 
         for (int i = 0; i < atmIdsData.length; i++) {
             final var atmId = atmIdsData[i];
-            if (atmId == 0) return previousAtmId;
+            if (atmId == 0) return;
 
-            if (previousAtmId != atmId) {
-                order.add(region, previousAtmId = atmId);
+            if (!atmIdPresenceArray[atmId]) {
+                atmIdPresenceArray[atmId] = true;
+                order.add(region, atmId);
             }
         }
-        return previousAtmId;
     }
 
     private void growIfNecessary(final int region) {
         if (data.length <= region) {
-            this.data = Arrays.copyOf(this.data, region >> 1);
+            this.data = Arrays.copyOf(this.data, Math.min(MAX_REGION, region >> 1));
         }
     }
 
-    private static class RequestTypesWithAtmIds {
-        private final AtmIds[] data = new AtmIds[4];
+    private static class RequestTypesWithATMIds {
+        private final ATMIds[] data = new ATMIds[4];
 
         private void add(final RequestType requestType, final int atmId) {
             atmIdsForRequestType(requestType).add(atmId);
         }
 
-        private AtmIds atmIdsForRequestType(final RequestType requestType) {
+        private int maxATMId() {
+            return Math.max(Math.max(Math.max(maxATMIdForRequestType(0), maxATMIdForRequestType(1)), maxATMIdForRequestType(2)), maxATMIdForRequestType(3));
+        }
+
+        private int maxATMIdForRequestType(final int requestTypeOrder) {
+            final var atmIds = data[requestTypeOrder];
+            return atmIds != null ? atmIds.maxValue : 0;
+        }
+
+        private ATMIds atmIdsForRequestType(final RequestType requestType) {
             final var order = requestType.getOrder();
             final var atmIds = this.data[order];
-            return atmIds == null ? this.data[order] = new AtmIds() : atmIds;
+            return atmIds == null ? this.data[order] = new ATMIds() : atmIds;
         }
     }
 
-    private static class AtmIds {
+    private static class ATMIds {
+        private static final int MAX_ATM_ID = 10_000;
         private int realSize = 0;
+        private int maxValue = 0;
         private int[] data = new int[10];
 
         private void add(final int atmId) {
+            this.maxValue =  Math.max(maxValue, atmId);
             growIfNecessary();
             this.data[this.realSize] = atmId;
             this.realSize++;
@@ -80,7 +97,7 @@ class Regions {
 
         private void growIfNecessary() {
             if (this.data.length == this.realSize) {
-                this.data = Arrays.copyOf(this.data, this.realSize >> 1);
+                this.data = Arrays.copyOf(this.data, Math.min(MAX_ATM_ID, this.realSize >> 1));
             }
         }
     }
