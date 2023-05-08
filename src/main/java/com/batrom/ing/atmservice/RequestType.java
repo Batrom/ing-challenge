@@ -1,11 +1,11 @@
 package com.batrom.ing.atmservice;
 
 enum RequestType {
-    STANDARD(0),
+    FAILURE_RESTART(0),
     PRIORITY(1),
     SIGNAL_LOW(2),
-    FAILURE_RESTART(3);
-    
+    STANDARD(3);
+
     private final int order;
 
     RequestType(final int order) {

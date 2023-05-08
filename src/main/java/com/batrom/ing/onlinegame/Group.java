@@ -1,7 +1,6 @@
 package com.batrom.ing.onlinegame;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.io.Serializable;
