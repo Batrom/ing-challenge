@@ -4,6 +4,8 @@ import java.util.*;
 
 class PlayersToGroupsAssigner {
 
+    private static final Comparator<Clan> CLAN_COMPARATOR = comparatorByPointsDescendingAndNumberOfPlayersAscending();
+
     static List<Group> assign(final Players players) {
         final var clans = players.clans();
         final var maxGroupSize = players.groupCount();
@@ -55,7 +57,7 @@ class PlayersToGroupsAssigner {
     }
 
     private static void sortClans(final Clan[] clans) {
-        Arrays.sort(clans, compareByPointsDescendingAndNumberOfPlayersAscending());
+        Arrays.sort(clans, CLAN_COMPARATOR);
     }
 
     private static List<Group> initializeGroups(final Clan[] clans) {
@@ -64,9 +66,7 @@ class PlayersToGroupsAssigner {
         return groups;
     }
 
-    private static Comparator<Clan> compareByPointsDescendingAndNumberOfPlayersAscending() {
-        return Comparator.comparingInt(Clan::points)
-                .reversed()
-                .thenComparingInt(Clan::numberOfPlayers);
+    private static Comparator<Clan> comparatorByPointsDescendingAndNumberOfPlayersAscending() {
+        return Comparator.comparingInt(Clan::points).reversed().thenComparingInt(Clan::numberOfPlayers);
     }
 }
