@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 class ATMServiceController {
 
     @PostMapping("/atms/calculateOrder")
-    ResponseEntity<Order> report(@RequestBody final Input input) {
+    ResponseEntity<Order> calculate(@RequestBody final Input input) {
         return ResponseEntity.ok(input.toResponse());
     }
 }

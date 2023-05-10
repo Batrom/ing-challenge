@@ -11,7 +11,7 @@ import java.util.List;
 class OnlineGameController {
 
     @PostMapping("/onlinegame/calculate")
-    ResponseEntity<List<Group>> report(@RequestBody final Players players) {
+    ResponseEntity<List<Group>> calculate(@RequestBody final Players players) {
         return ResponseEntity.ok(PlayersToGroupsAssigner.assign(players));
     }
 }
