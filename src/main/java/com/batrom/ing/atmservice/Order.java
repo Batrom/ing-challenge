@@ -22,7 +22,7 @@ class Order {
 
     private void growIfNecessary() {
         if (this.data.length == this.realSize) {
-            this.data = Arrays.copyOf(this.data, this.realSize >> 1);
+            this.data = Arrays.copyOf(this.data, this.realSize + (this.realSize >> 1));
         }
     }
 }

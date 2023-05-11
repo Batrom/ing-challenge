@@ -1,6 +1,7 @@
 package com.batrom.ing.atmservice;
 
 import java.util.Arrays;
+import java.util.BitSet;
 
 class Regions {
 
@@ -26,18 +27,17 @@ class Regions {
             final var regionData = this.data[region];
             if (regionData == null) continue;
 
-            final var atmIdPresenceArray = new boolean[regionData.maxATMId() + 1];
-
-            addToOrder(order, region, regionData.data[0], atmIdPresenceArray);
-            addToOrder(order, region, regionData.data[1], atmIdPresenceArray);
-            addToOrder(order, region, regionData.data[2], atmIdPresenceArray);
-            addToOrder(order, region, regionData.data[3], atmIdPresenceArray);
+            final var atmIdPresenceSet = new BitSet(regionData.maxATMId + 1);
+            addToOrder(order, region, regionData.data[0], atmIdPresenceSet);
+            addToOrder(order, region, regionData.data[1], atmIdPresenceSet);
+            addToOrder(order, region, regionData.data[2], atmIdPresenceSet);
+            addToOrder(order, region, regionData.data[3], atmIdPresenceSet);
 
         }
         return order;
     }
 
-    private static void addToOrder(final Order order, final int region, final ATMIds atmIds, final boolean[] atmIdPresenceArray) {
+    private static void addToOrder(final Order order, final int region, final ATMIds atmIds, final BitSet atmIdPresenceSet) {
         if (atmIds == null) return;
 
         final var atmIdsData = atmIds.data;
@@ -46,8 +46,8 @@ class Regions {
             final var atmId = atmIdsData[i];
             if (atmId == 0) return;
 
-            if (!atmIdPresenceArray[atmId]) {
-                atmIdPresenceArray[atmId] = true;
+            if (!atmIdPresenceSet.get(atmId)) {
+                atmIdPresenceSet.set(atmId);
                 order.add(region, atmId);
             }
         }
@@ -55,24 +55,17 @@ class Regions {
 
     private void growIfNecessary(final int region) {
         if (data.length <= region) {
-            this.data = Arrays.copyOf(this.data, Math.min(MAX_REGION, region >> 1));
+            this.data = Arrays.copyOf(this.data, Math.min(MAX_REGION, region + (region >> 1)));
         }
     }
 
     private static class RequestTypesWithATMIds {
         private final ATMIds[] data = new ATMIds[4];
+        private int maxATMId = 0;
 
         private void add(final RequestType requestType, final int atmId) {
+            this.maxATMId =  Math.max(this.maxATMId, atmId);
             atmIdsForRequestType(requestType).add(atmId);
-        }
-
-        private int maxATMId() {
-            return Math.max(Math.max(Math.max(maxATMIdForRequestType(0), maxATMIdForRequestType(1)), maxATMIdForRequestType(2)), maxATMIdForRequestType(3));
-        }
-
-        private int maxATMIdForRequestType(final int requestTypeOrder) {
-            final var atmIds = data[requestTypeOrder];
-            return atmIds != null ? atmIds.maxValue : 0;
         }
 
         private ATMIds atmIdsForRequestType(final RequestType requestType) {
@@ -85,11 +78,9 @@ class Regions {
     private static class ATMIds {
         private static final int MAX_ATM_ID = 10_000;
         private int realSize = 0;
-        private int maxValue = 0;
         private int[] data = new int[10];
 
         private void add(final int atmId) {
-            this.maxValue =  Math.max(maxValue, atmId);
             growIfNecessary();
             this.data[this.realSize] = atmId;
             this.realSize++;
@@ -97,7 +88,7 @@ class Regions {
 
         private void growIfNecessary() {
             if (this.data.length == this.realSize) {
-                this.data = Arrays.copyOf(this.data, Math.min(MAX_ATM_ID, this.realSize >> 1));
+                this.data = Arrays.copyOf(this.data, Math.min(MAX_ATM_ID, this.realSize + (this.realSize >> 1)));
             }
         }
     }

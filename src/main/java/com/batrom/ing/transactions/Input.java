@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.io.Serializable;
 
 @JsonDeserialize(using = InputDeserializer.class)
-interface Input extends Serializable {
-    Account[] toResponse();
+record Input(Account[] accounts) implements Serializable {
+
+    public Account[] toResponse() {
+        return accounts;
+    }
 }

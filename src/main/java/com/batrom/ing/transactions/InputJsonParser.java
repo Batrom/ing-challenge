@@ -7,15 +7,12 @@ import java.util.Map;
 
 import static com.batrom.ing.transactions.TransactionsHelper.*;
 
-class SmallInputJsonParser {
+class InputJsonParser {
 
     static Account[] parse(final JsonNode node) {
         final var accountsMap = new HashMap<String, Account>();
 
-        final var iterator = node.iterator();
-        while (iterator.hasNext()) {
-            final var transaction = iterator.next();
-
+        for (final JsonNode transaction : node) {
             final var debitAccountNumber = extractDebitAccount(transaction);
             final var creditAccountNumber = extractCreditAccount(transaction);
             final var amount = extractAmount(transaction);

@@ -12,12 +12,7 @@ class InputDeserializer extends JsonDeserializer<Input> {
     @Override
     public Input deserialize(final JsonParser jsonParser, final DeserializationContext context) throws IOException {
         final var node = readTreeToArrayNode(jsonParser);
-
-        if (node.size() < 10_000) {
-            return SmallInput.fromJson(node);
-        } else {
-            return LargeInput.fromJson(node);
-        }
+        return new Input(InputJsonParser.parse(node));
     }
 
     private static JsonNode readTreeToArrayNode(final JsonParser jsonParser) throws IOException {
