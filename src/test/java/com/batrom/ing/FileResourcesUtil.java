@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,13 +19,12 @@ public class FileResourcesUtil {
                 .orElse(List.of());
     }
 
-    public static List<String> readFile(File file) {
+    public static String readFile(File file) {
         try {
-            return Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+            return Files.readString(file.toPath());
         } catch (final IOException exception) {
             throw new RuntimeException(exception);
         }
-
     }
 
     private static List<File> findFiles(final URL resource) {
