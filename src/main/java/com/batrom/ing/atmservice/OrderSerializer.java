@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
-class OrderSerializer extends JsonSerializer<Order> {
+public class OrderSerializer extends JsonSerializer<Order> {
 
     @Override
     public void serialize(final Order order, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {

@@ -1,11 +1,8 @@
 package com.batrom.ing.atmservice;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import java.util.Arrays;
 
-@JsonSerialize(using = OrderSerializer.class)
-class Order {
+public class Order {
     private int realSize = 0;
 
     private ATM[] data = new ATM[10];

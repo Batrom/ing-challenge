@@ -1,15 +1,24 @@
-package com.batrom.ing.atmservice;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-class ATMServiceController {
-
-    @PostMapping("/atms/calculateOrder")
-    ResponseEntity<Order> calculate(@RequestBody final Input input) {
-        return ResponseEntity.ok(input.toResponse());
-    }
-}
+//package com.batrom.ing.atmservice;
+//
+//import io.javalin.http.Handler;
+//
+//public class ATMServiceController {
+//
+//    public static Handler fetchAllUsernames = ctx -> {
+//        UserDao dao = UserDao.instance();
+//        Iterable<String> allUsers = dao.getAllUsernames();
+//        ctx.json(allUsers);
+//    };
+//
+//    public static Handler fetchById = ctx -> {
+//
+//        int id = Integer.parseInt(Objects.requireNonNull(ctx.param("id")));
+//        UserDao dao = UserDao.instance();
+//        Optional<User> user = dao.getUserById(id);
+//        if (user.isPresent()) {
+//            ctx.json(user);
+//        } else {
+//            ctx.html("Not Found");
+//        }
+//    };
+//}
