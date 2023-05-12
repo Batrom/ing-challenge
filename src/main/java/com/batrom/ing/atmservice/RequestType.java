@@ -1,6 +1,6 @@
 package com.batrom.ing.atmservice;
 
-public enum RequestType {
+enum RequestType {
     FAILURE_RESTART(0),
     PRIORITY(1),
     SIGNAL_LOW(2),

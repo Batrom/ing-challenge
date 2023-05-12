@@ -1,12 +1,9 @@
 package com.batrom.ing.transactions;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-
 import java.io.Serializable;
 import java.util.Objects;
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-class Account implements Serializable {
+public class Account implements Serializable {
     private final String account;
     private int debitCount;
     private int creditCount;
@@ -17,10 +14,6 @@ class Account implements Serializable {
         this.debitCount = debitCount;
         this.creditCount = creditCount;
         this.balance = balance;
-    }
-
-    String getAccount() {
-        return account;
     }
 
     static Account initializeWithDebit(final String accountNumber, final double balance) {
@@ -39,6 +32,22 @@ class Account implements Serializable {
     void updateCredit(final double amount) {
         creditCount++;
         balance += amount;
+    }
+
+    String getAccount() {
+        return account;
+    }
+
+    int getDebitCount() {
+        return debitCount;
+    }
+
+    int getCreditCount() {
+        return creditCount;
+    }
+
+    double getBalance() {
+        return balance;
     }
 
     @Override

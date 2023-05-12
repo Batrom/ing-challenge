@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
 
-class InputDeserializer extends JsonDeserializer<Input> {
+public class InputDeserializer extends JsonDeserializer<Input> {
 
     @Override
     public Input deserialize(final JsonParser jsonParser, final DeserializationContext context) throws IOException {

@@ -1,16 +1,11 @@
 package com.batrom.ing.onlinegame;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-class Group implements Serializable {
+public class Group implements Serializable {
     transient private int size;
-    @JsonValue
     private final List<Clan> clans;
 
     private Group(final int size, final List<Clan> clans) {
@@ -37,4 +32,7 @@ class Group implements Serializable {
         return size == maxSize;
     }
 
+    List<Clan> getClans() {
+        return clans;
+    }
 }

@@ -42,8 +42,7 @@ class Regions {
 
         final var atmIdsData = atmIds.data;
 
-        for (int i = 0; i < atmIdsData.length; i++) {
-            final var atmId = atmIdsData[i];
+        for (final int atmId : atmIdsData) {
             if (atmId == 0) return;
 
             if (!atmIdPresenceSet.get(atmId)) {
@@ -64,7 +63,7 @@ class Regions {
         private int maxATMId = 0;
 
         private void add(final RequestType requestType, final int atmId) {
-            this.maxATMId =  Math.max(this.maxATMId, atmId);
+            this.maxATMId = Math.max(this.maxATMId, atmId);
             atmIdsForRequestType(requestType).add(atmId);
         }
 

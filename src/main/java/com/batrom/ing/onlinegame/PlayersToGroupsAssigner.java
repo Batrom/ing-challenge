@@ -6,10 +6,10 @@ class PlayersToGroupsAssigner {
 
     private static final Comparator<Clan> CLAN_COMPARATOR = comparatorByPointsDescendingAndNumberOfPlayersAscending();
 
-    static List<Group> assign(final Players players) {
+    static Group[] assign(final Players players) {
         final var clans = players.clans();
         final var maxGroupSize = players.groupCount();
-        if (clans.length == 0) return Collections.emptyList();
+        if (clans.length == 0) return new Group[0];
         sortClans(clans);
 
         final var groups = initializeGroups(clans);
@@ -53,7 +53,7 @@ class PlayersToGroupsAssigner {
             }
         }
 
-        return groups;
+        return groups.toArray(new Group[0]);
     }
 
     private static void sortClans(final Clan[] clans) {

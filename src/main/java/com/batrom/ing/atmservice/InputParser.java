@@ -7,10 +7,7 @@ class InputParser {
     public static Input parse(final JsonNode tasks) {
         final var regions = new Regions();
 
-        final var iterator = tasks.iterator();
-        while (iterator.hasNext()) {
-            final var task = iterator.next();
-
+        for (final JsonNode task : tasks) {
             final var region = task.get("region").intValue();
             final var requestType = RequestType.valueOf(task.get("requestType").textValue());
             final var atmId = task.get("atmId").intValue();

@@ -12,8 +12,7 @@ public class OrderSerializer extends JsonSerializer<Order> {
     public void serialize(final Order order, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartArray();
         final var atms = order.getATMs();
-        for (int i = 0; i < atms.length; i++) {
-            final var atm = atms[i];
+        for (final ATM atm : atms) {
             if (atm == null) continue;
 
             jsonGenerator.writeStartObject();

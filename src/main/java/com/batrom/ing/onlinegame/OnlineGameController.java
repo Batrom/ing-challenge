@@ -1,17 +1,8 @@
-//package com.batrom.ing.onlinegame;
-//
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestBody;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//import java.util.List;
-//
-//@RestController
-//class OnlineGameController {
-//
-//    @PostMapping("/onlinegame/calculate")
-//    ResponseEntity<List<Group>> calculate(@RequestBody final Players players) {
-//        return ResponseEntity.ok(PlayersToGroupsAssigner.assign(players));
-//    }
-//}
+package com.batrom.ing.onlinegame;
+
+import io.javalin.http.Handler;
+
+public interface OnlineGameController {
+    String ENDPOINT = "/onlinegame/calculate";
+    Handler HANDLER = ctx -> ctx.json(PlayersToGroupsAssigner.assign(ctx.bodyAsClass(Players.class)));
+}
