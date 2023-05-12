@@ -12,6 +12,8 @@
         <javalin.version>5.5.0</javalin.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-assembly-plugin.version>3.5.0</maven-assembly-plugin.version>
+        <sonar.organization>batrom</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
     <dependencies>
         <dependency>
