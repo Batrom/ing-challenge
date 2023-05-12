@@ -26,9 +26,10 @@ public class IngApplication {
     }
 
     private static void config(final JavalinConfig config) {
-        config.jsonMapper(new JavalinJackson().updateMapper(mapper -> {
-            mapper.registerModule(moduleWithSerializers());
-        }));
+        config.jsonMapper(
+                new JavalinJackson().updateMapper(mapper -> {
+                    mapper.registerModule(moduleWithSerializers());
+                }));
         config.http.maxRequestSize = MAX_REQUEST_SIZE;
     }
 
@@ -37,7 +38,7 @@ public class IngApplication {
         module.addDeserializer(com.batrom.ing.atmservice.Input.class, new com.batrom.ing.atmservice.InputDeserializer());
         module.addDeserializer(com.batrom.ing.transactions.Input.class, new com.batrom.ing.transactions.InputDeserializer());
         module.addDeserializer(Input.class, new InputDeserializer());
-        module.addSerializer(Order.class, new OrderSerializer());
+        module.addSerializer(ATM[].class, new ATMsSerializer());
         module.addSerializer(Account[].class, new AccountsSerializer());
         module.addSerializer(Group[].class, new GroupsSerializer());
         return module;

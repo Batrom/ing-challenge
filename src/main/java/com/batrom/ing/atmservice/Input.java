@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public record Input(Regions regions) implements Serializable {
 
-    public Order toResponse() {
-        return regions.toOrder();
+    public ATM[] toResponse() {
+        return regions.toOrder().getATMs();
     }
 }

@@ -6,15 +6,12 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
-public class OrderSerializer extends JsonSerializer<Order> {
+public class ATMsSerializer extends JsonSerializer<ATM[]> {
 
     @Override
-    public void serialize(final Order order, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
+    public void serialize(final ATM[] atms, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartArray();
-        final var atms = order.getATMs();
         for (final ATM atm : atms) {
-            if (atm == null) continue;
-
             jsonGenerator.writeStartObject();
             jsonGenerator.writeNumberField("region", atm.region());
             jsonGenerator.writeNumberField("atmId", atm.atmId());

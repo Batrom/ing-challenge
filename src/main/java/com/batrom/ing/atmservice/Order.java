@@ -2,9 +2,10 @@ package com.batrom.ing.atmservice;
 
 import java.util.Arrays;
 
-public class Order {
-    private int realSize = 0;
+class Order {
+    private static final ATM[] EMPTY = new ATM[0];
 
+    private int realSize = 0;
     private ATM[] data = new ATM[10];
 
     void add(final int region, final int atmId) {
@@ -14,7 +15,10 @@ public class Order {
     }
 
     ATM[] getATMs() {
-        return data;
+        if (this.realSize < this.data.length) {
+            return this.realSize == 0 ? EMPTY : Arrays.copyOf(this.data, this.realSize);
+        }
+        return this.data;
     }
 
     private void growIfNecessary() {

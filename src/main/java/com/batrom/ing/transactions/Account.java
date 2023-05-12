@@ -54,8 +54,8 @@ public class Account implements Serializable {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final Account account1 = (Account) o;
-        return Objects.equals(account, account1.account);
+        final Account other = (Account) o;
+        return Objects.equals(account, other.account);
     }
 
     @Override

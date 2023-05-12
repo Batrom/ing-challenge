@@ -1,6 +1,7 @@
 package com.batrom.ing.onlinegame;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
 
 class PlayersToGroupsAssigner {
 
@@ -12,9 +13,9 @@ class PlayersToGroupsAssigner {
         if (clans.length == 0) return new Group[0];
         sortClans(clans);
 
-        final var groups = initializeGroups(clans);
+        final var groups = initializeGroups(clans[0], maxGroupSize);
         int firstNonFullGroupPosition = 0;
-        boolean allGroupsAreFullSoFar = groups.get(0).isFull(maxGroupSize);
+        boolean allGroupsAreFullSoFar = groups.get(0).isFull();
 
         for (int clanIndex = 1; clanIndex < clans.length; clanIndex++) {
             final var clan = clans[clanIndex];
@@ -22,11 +23,11 @@ class PlayersToGroupsAssigner {
 
             for (int groupPosition = firstNonFullGroupPosition; groupPosition < groups.size(); groupPosition++) {
                 final var group = groups.get(groupPosition);
-                if (group.willFit(clan.numberOfPlayers(), maxGroupSize)) {
+                if (group.willFit(clan.numberOfPlayers())) {
                     group.addClan(clan);
 
                     if (allGroupsAreFullSoFar) {
-                        if (!group.isFull(maxGroupSize)) {
+                        if (!group.isFull()) {
                             allGroupsAreFullSoFar = false;
                             firstNonFullGroupPosition = groupPosition;
                         } else {
@@ -39,11 +40,11 @@ class PlayersToGroupsAssigner {
             }
 
             if (!clanAddedToGroup) {
-                final var group = Group.of(clan);
+                final var group = Group.of(clan, maxGroupSize);
                 groups.add(group);
 
                 if (allGroupsAreFullSoFar) {
-                    if (!group.isFull(maxGroupSize)) {
+                    if (!group.isFull()) {
                         allGroupsAreFullSoFar = false;
                         firstNonFullGroupPosition = groups.size() - 1;
                     } else {
@@ -53,17 +54,15 @@ class PlayersToGroupsAssigner {
             }
         }
 
-        return groups.toArray(new Group[0]);
+        return groups.getData();
     }
 
     private static void sortClans(final Clan[] clans) {
         Arrays.sort(clans, CLAN_COMPARATOR);
     }
 
-    private static List<Group> initializeGroups(final Clan[] clans) {
-        final var groups = new ArrayList<Group>();
-        groups.add(Group.of(clans[0]));
-        return groups;
+    private static Groups initializeGroups(final Clan firstClan, final int maxGroupSize) {
+        return Groups.of(Group.of(firstClan, maxGroupSize));
     }
 
     private static Comparator<Clan> comparatorByPointsDescendingAndNumberOfPlayersAscending() {

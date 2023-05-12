@@ -1,38 +1,34 @@
 package com.batrom.ing.onlinegame;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Group implements Serializable {
-    transient private int size;
-    private final List<Clan> clans;
+    transient private int sizeLeft;
+    private final Clans clans;
 
-    private Group(final int size, final List<Clan> clans) {
-        this.size = size;
+    private Group(final Clans clans, final int sizeLeft) {
+        this.sizeLeft = sizeLeft;
         this.clans = clans;
     }
 
-    static Group of(final Clan clan) {
-        final var clans = new ArrayList<Clan>();
-        clans.add(clan);
-        return new Group(clan.numberOfPlayers(), clans);
+    static Group of(final Clan clan, final int maxSize) {
+        return new Group(Clans.of(clan), maxSize - clan.numberOfPlayers());
     }
 
     void addClan(final Clan clan) {
         clans.add(clan);
-        size += clan.numberOfPlayers();
+        sizeLeft -= clan.numberOfPlayers();
     }
 
-    boolean willFit(final int newClanSize, final int maxSize) {
-        return size + newClanSize <= maxSize;
+    boolean willFit(final int newClanSize) {
+        return sizeLeft >= newClanSize;
     }
 
-    boolean isFull(final int maxSize) {
-        return size == maxSize;
+    boolean isFull() {
+        return sizeLeft == 0;
     }
 
-    List<Clan> getClans() {
-        return clans;
+    Clan[] getClans() {
+        return clans.getData();
     }
 }
