@@ -10,7 +10,7 @@ import io.javalin.json.JavalinJackson;
 
 public class IngApplication {
 
-    private static final int MAX_REQUEST_SIZE = 52_428_800;
+    private static final int MAX_REQUEST_SIZE = 104_857_600; // 100 MB
     private static final int PORT = 8080;
 
     public static void main(final String[] args) {
@@ -25,11 +25,12 @@ public class IngApplication {
     }
 
     private static void config(final JavalinConfig config) {
-        config.jsonMapper(
-                new JavalinJackson().updateMapper(mapper -> {
-                    mapper.registerModule(moduleWithSerializers());
-                }));
+        config.jsonMapper(jacksonConfiguration());
         config.http.maxRequestSize = MAX_REQUEST_SIZE;
+    }
+
+    private static JavalinJackson jacksonConfiguration() {
+        return new JavalinJackson().updateMapper(mapper -> mapper.registerModule(moduleWithSerializers()));
     }
 
     private static SimpleModule moduleWithSerializers() {
