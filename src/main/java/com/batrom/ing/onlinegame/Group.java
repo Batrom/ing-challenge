@@ -24,10 +24,6 @@ public class Group implements Serializable {
         return this.sizeLeft >= newClanSize;
     }
 
-    boolean isFull(final int minClanSize) {
-        return this.sizeLeft < minClanSize;
-    }
-
     Clan[] getClans() {
         return this.clans.getData();
     }
