@@ -13,24 +13,13 @@ class PlayersToGroupsAssigner {
         if (clans.length == 0) return new Group[0];
 
         sortClans(clans);
-
-        final var map = new GroupsMap(maxGroupSize);
-        for (int i = clans.length - 1; i >= 0 ; i--) {
-            final var clan = clans[i];
-            final var numberOfPlayers = clan.getNumberOfPlayers();
-            final var clansWithGivenNumberOfPlayers = map.get(numberOfPlayers);
-            if (clansWithGivenNumberOfPlayers != null) {
-                clansWithGivenNumberOfPlayers.push(clan);
-            } else {
-                map.put(clan);
-            }
-        }
+        final var groupsMap = createGroupsMap(clans, maxGroupSize);
 
         int sortedClansIndex = 0;
         final var firstClan = clans[sortedClansIndex];
         final var groups = initializeGroups(firstClan, maxGroupSize);
         firstClan.setIsAssignedToTrue();
-        map.get(firstClan.getNumberOfPlayers()).pop();
+        groupsMap.get(firstClan.getNumberOfPlayers()).pop();
         sortedClansIndex++;
 
         int groupsIndex = 0;
@@ -41,7 +30,7 @@ class PlayersToGroupsAssigner {
             Clan clanWithMaxPoints = null;
             GroupsMap.ClansStack clanWithMaxPointsContainer = null;
             for (int sizeThatWillFitIntoGroup = group.getSizeLeft(); sizeThatWillFitIntoGroup > 0; sizeThatWillFitIntoGroup--) {
-                final var clansThatWillFit = map.get(sizeThatWillFitIntoGroup);
+                final var clansThatWillFit = groupsMap.get(sizeThatWillFitIntoGroup);
                 if (clansThatWillFit != null && !clansThatWillFit.isEmpty()) {
                     final var clan = clansThatWillFit.peek();
                     if (clanWithMaxPoints == null || (clan.getPoints() >= clanWithMaxPoints.getPoints())) {
@@ -60,7 +49,7 @@ class PlayersToGroupsAssigner {
                     if (clan.isNotAssigned()) {
                         groups.add(Group.of(clan, maxGroupSize));
                         clan.setIsAssignedToTrue();
-                        map.get(clan.getNumberOfPlayers()).pop();
+                        groupsMap.get(clan.getNumberOfPlayers()).pop();
                         groupsIndex++;
                         continue groupsLoop;
                     }
@@ -70,6 +59,21 @@ class PlayersToGroupsAssigner {
         }
 
         return groups.getData();
+    }
+
+    private static GroupsMap createGroupsMap(final Clan[] clans, final int maxGroupSize) {
+        final var map = new GroupsMap(maxGroupSize);
+        for (int i = clans.length - 1; i >= 0 ; i--) {
+            final var clan = clans[i];
+            final var numberOfPlayers = clan.getNumberOfPlayers();
+            final var clansWithGivenNumberOfPlayers = map.get(numberOfPlayers);
+            if (clansWithGivenNumberOfPlayers != null) {
+                clansWithGivenNumberOfPlayers.push(clan);
+            } else {
+                map.put(clan);
+            }
+        }
+        return map;
     }
 
     private static void sortClans(final Clan[] clans) {
