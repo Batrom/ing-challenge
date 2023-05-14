@@ -16,8 +16,8 @@ public class GroupsSerializer extends JsonSerializer<Group[]> {
             for (final Clan clan : group.getClans()) {
                 if (clan == null) continue;
                 jsonGenerator.writeStartObject();
-                jsonGenerator.writeNumberField("numberOfPlayers", clan.numberOfPlayers());
-                jsonGenerator.writeNumberField("points", clan.points());
+                jsonGenerator.writeNumberField("numberOfPlayers", clan.getNumberOfPlayers());
+                jsonGenerator.writeNumberField("points", clan.getPoints());
                 jsonGenerator.writeEndObject();
             }
             jsonGenerator.writeEndArray();

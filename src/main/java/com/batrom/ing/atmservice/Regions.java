@@ -53,7 +53,7 @@ class Regions {
     }
 
     private void growIfNecessary(final int region) {
-        if (data.length <= region) {
+        if (this.data.length <= region) {
             this.data = Arrays.copyOf(this.data, Math.min(MAX_REGION, region + (region >> 1)));
         }
     }

@@ -12,19 +12,19 @@ public class Group implements Serializable {
     }
 
     static Group of(final Clan clan, final int maxSize) {
-        return new Group(Clans.of(clan), maxSize - clan.numberOfPlayers());
+        return new Group(Clans.of(clan), maxSize - clan.getNumberOfPlayers());
     }
 
     void addClan(final Clan clan) {
         this.clans.add(clan);
-        this.sizeLeft -= clan.numberOfPlayers();
-    }
-
-    boolean willFit(final int newClanSize) {
-        return this.sizeLeft >= newClanSize;
+        this.sizeLeft -= clan.getNumberOfPlayers();
     }
 
     Clan[] getClans() {
         return this.clans.getData();
+    }
+
+    int getSizeLeft() {
+        return sizeLeft;
     }
 }
