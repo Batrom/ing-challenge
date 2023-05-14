@@ -1,12 +1,11 @@
 package com.batrom.ing.onlinegame;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
 
 class PlayersToGroupsAssigner {
 
     private static final Comparator<Clan> CLAN_COMPARATOR = comparatorByPointsDescendingAndNumberOfPlayersAscending();
-    private static final Clan EMPTY_CLAN = new Clan(0, 0);
-    private static final Deque<Clan> EMPTY_LIST = new LinkedList<>();
 
     static Group[] assign(final OnlineGameInput input) {
         final var clans = input.clans();
@@ -15,16 +14,15 @@ class PlayersToGroupsAssigner {
 
         sortClans(clans);
 
-        final var map = new HashMap<Integer, Deque<Clan>>();
-        for (final Clan clan : clans) {
+        final var map = new GroupsMap(maxGroupSize);
+        for (int i = clans.length - 1; i >= 0 ; i--) {
+            final var clan = clans[i];
             final var numberOfPlayers = clan.getNumberOfPlayers();
             final var clansWithGivenNumberOfPlayers = map.get(numberOfPlayers);
             if (clansWithGivenNumberOfPlayers != null) {
-                clansWithGivenNumberOfPlayers.add(clan);
+                clansWithGivenNumberOfPlayers.push(clan);
             } else {
-                final var value = new LinkedList<Clan>();
-                value.add(clan);
-                map.put(numberOfPlayers, value);
+                map.put(clan);
             }
         }
 
@@ -40,19 +38,19 @@ class PlayersToGroupsAssigner {
         groupsLoop:
         while (true) {
             final var group = groups.getData()[groupsIndex];
-            Clan clanWithMaxPoints = EMPTY_CLAN;
-            Deque<Clan> clanWithMaxPointsContainer = EMPTY_LIST;
+            Clan clanWithMaxPoints = null;
+            GroupsMap.ClansStack clanWithMaxPointsContainer = null;
             for (int sizeThatWillFitIntoGroup = group.getSizeLeft(); sizeThatWillFitIntoGroup > 0; sizeThatWillFitIntoGroup--) {
                 final var clansThatWillFit = map.get(sizeThatWillFitIntoGroup);
                 if (clansThatWillFit != null && !clansThatWillFit.isEmpty()) {
                     final var clan = clansThatWillFit.peek();
-                    if (clan.getPoints() >= clanWithMaxPoints.getPoints()) {
+                    if (clanWithMaxPoints == null || (clan.getPoints() >= clanWithMaxPoints.getPoints())) {
                         clanWithMaxPoints = clan;
                         clanWithMaxPointsContainer = clansThatWillFit;
                     }
                 }
             }
-            if (clanWithMaxPoints != EMPTY_CLAN) {
+            if (clanWithMaxPoints != null) {
                 clanWithMaxPointsContainer.pop();
                 clanWithMaxPoints.setIsAssignedToTrue();
                 group.addClan(clanWithMaxPoints);
