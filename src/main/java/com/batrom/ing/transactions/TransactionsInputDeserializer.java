@@ -1,4 +1,4 @@
-package com.batrom.ing.atmservice;
+package com.batrom.ing.transactions;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -7,12 +7,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
 
-public class InputDeserializer extends JsonDeserializer<Input> {
+public class TransactionsInputDeserializer extends JsonDeserializer<TransactionsInput> {
 
     @Override
-    public Input deserialize(final JsonParser jsonParser, final DeserializationContext context) throws IOException {
-        final var tasks = readTreeToArrayNode(jsonParser);
-        return InputParser.parse(tasks);
+    public TransactionsInput deserialize(final JsonParser jsonParser, final DeserializationContext context) throws IOException {
+        final var node = readTreeToArrayNode(jsonParser);
+        return new TransactionsInput(InputJsonParser.parse(node));
     }
 
     private static JsonNode readTreeToArrayNode(final JsonParser jsonParser) throws IOException {

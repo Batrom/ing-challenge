@@ -16,19 +16,19 @@ public class Group implements Serializable {
     }
 
     void addClan(final Clan clan) {
-        clans.add(clan);
-        sizeLeft -= clan.numberOfPlayers();
+        this.clans.add(clan);
+        this.sizeLeft -= clan.numberOfPlayers();
     }
 
     boolean willFit(final int newClanSize) {
-        return sizeLeft >= newClanSize;
+        return this.sizeLeft >= newClanSize;
     }
 
-    boolean isFull() {
-        return sizeLeft == 0;
+    boolean isFull(final int minClanSize) {
+        return this.sizeLeft < minClanSize;
     }
 
     Clan[] getClans() {
-        return clans.getData();
+        return this.clans.getData();
     }
 }

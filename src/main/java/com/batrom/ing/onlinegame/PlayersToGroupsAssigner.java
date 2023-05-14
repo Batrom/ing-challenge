@@ -7,54 +7,71 @@ class PlayersToGroupsAssigner {
 
     private static final Comparator<Clan> CLAN_COMPARATOR = comparatorByPointsDescendingAndNumberOfPlayersAscending();
 
-    static Group[] assign(final Players players) {
-        final var clans = players.clans();
-        final var maxGroupSize = players.groupCount();
+    static Group[] assign(final OnlineGameInput input) {
+        final var clanSizeCounters = input.clanSizeCounters();
+        final var clans = input.clans();
+        final var maxGroupSize = input.groupCount();
+
         if (clans.length == 0) return new Group[0];
+
+        int minClanSize = minClanSize(clanSizeCounters, 1);
+
         sortClans(clans);
-
         final var groups = initializeGroups(clans[0], maxGroupSize);
-        int firstNonFullGroupPosition = 0;
-        boolean allGroupsAreFullSoFar = groups.get(0).isFull();
+        int indexOfFirstNonFullGroup = 0;
 
+        clansLoop:
         for (int clanIndex = 1; clanIndex < clans.length; clanIndex++) {
             final var clan = clans[clanIndex];
-            boolean clanAddedToGroup = false;
 
-            for (int groupPosition = firstNonFullGroupPosition; groupPosition < groups.size(); groupPosition++) {
-                final var group = groups.get(groupPosition);
-                if (group.willFit(clan.numberOfPlayers())) {
+            boolean allGroupsAreFullSoFar = true;
+            for (int groupIndex = indexOfFirstNonFullGroup; groupIndex < groups.size(); groupIndex++) {
+                final var group = groups.get(groupIndex);
+
+                allGroupsAreFullSoFar = allGroupsAreFullSoFar && group.isFull(minClanSize);
+                if (allGroupsAreFullSoFar) {
+                    indexOfFirstNonFullGroup = groupIndex + 1;
+                }
+
+                final var numberOfPlayers = clan.numberOfPlayers();
+                if (group.willFit(numberOfPlayers)) {
                     group.addClan(clan);
 
+                    clanSizeCounters[numberOfPlayers] -= 1;
+                    minClanSize = minClanSize(clanSizeCounters, minClanSize);
+
+                    allGroupsAreFullSoFar = allGroupsAreFullSoFar && group.isFull(minClanSize);
                     if (allGroupsAreFullSoFar) {
-                        if (!group.isFull()) {
-                            allGroupsAreFullSoFar = false;
-                            firstNonFullGroupPosition = groupPosition;
-                        } else {
-                            firstNonFullGroupPosition = groupPosition + 1;
-                        }
+                        indexOfFirstNonFullGroup = groupIndex + 1;
                     }
-                    clanAddedToGroup = true;
-                    break;
+
+                    continue clansLoop;
                 }
             }
 
-            if (!clanAddedToGroup) {
-                final var group = Group.of(clan, maxGroupSize);
-                groups.add(group);
+            // if no group found with enough space then create new one
+            final var group = Group.of(clan, maxGroupSize);
+            groups.add(group);
 
-                if (allGroupsAreFullSoFar) {
-                    if (!group.isFull()) {
-                        allGroupsAreFullSoFar = false;
-                        firstNonFullGroupPosition = groups.size() - 1;
-                    } else {
-                        firstNonFullGroupPosition = groups.size();
-                    }
-                }
+            clanSizeCounters[clan.numberOfPlayers()] -= 1;
+            minClanSize = minClanSize(clanSizeCounters, minClanSize);
+
+            allGroupsAreFullSoFar = allGroupsAreFullSoFar && group.isFull(minClanSize);
+            if (allGroupsAreFullSoFar) {
+                indexOfFirstNonFullGroup = groups.size();
             }
         }
 
         return groups.getData();
+    }
+
+    private static int minClanSize(final int[] clanSizeCounters, final int currentMinClanSize) {
+        for (int clanSize = currentMinClanSize; clanSize < clanSizeCounters.length; clanSize++) {
+            if (clanSizeCounters[clanSize] > 0) {
+                return clanSize;
+            }
+        }
+        return currentMinClanSize;
     }
 
     private static void sortClans(final Clan[] clans) {

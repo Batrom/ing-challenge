@@ -2,9 +2,9 @@ package com.batrom.ing.atmservice;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-class InputParser {
+class InputJsonParser {
 
-    public static Input parse(final JsonNode tasks) {
+    static ATMServiceInput parse(final JsonNode tasks) {
         final var regions = new Regions();
 
         for (final JsonNode task : tasks) {
@@ -14,6 +14,6 @@ class InputParser {
             regions.add(region, requestType, atmId);
         }
 
-        return new Input(regions);
+        return new ATMServiceInput(regions);
     }
 }

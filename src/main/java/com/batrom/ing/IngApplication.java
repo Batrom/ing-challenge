@@ -1,12 +1,8 @@
 package com.batrom.ing;
 
 import com.batrom.ing.atmservice.*;
-import com.batrom.ing.onlinegame.Group;
-import com.batrom.ing.onlinegame.GroupsSerializer;
-import com.batrom.ing.onlinegame.OnlineGameController;
-import com.batrom.ing.transactions.Account;
-import com.batrom.ing.transactions.AccountsSerializer;
-import com.batrom.ing.transactions.TransactionsController;
+import com.batrom.ing.onlinegame.*;
+import com.batrom.ing.transactions.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
@@ -35,9 +31,9 @@ public class IngApplication {
 
     private static SimpleModule moduleWithSerializers() {
         final var module = new SimpleModule();
-        module.addDeserializer(com.batrom.ing.atmservice.Input.class, new com.batrom.ing.atmservice.InputDeserializer());
-        module.addDeserializer(com.batrom.ing.transactions.Input.class, new com.batrom.ing.transactions.InputDeserializer());
-        module.addDeserializer(Input.class, new InputDeserializer());
+        module.addDeserializer(ATMServiceInput.class, new ATMServiceInputDeserializer());
+        module.addDeserializer(TransactionsInput.class, new TransactionsInputDeserializer());
+        module.addDeserializer(OnlineGameInput.class, new OnlineGameInputDeserializer());
         module.addSerializer(ATM[].class, new ATMsSerializer());
         module.addSerializer(Account[].class, new AccountsSerializer());
         module.addSerializer(Group[].class, new GroupsSerializer());

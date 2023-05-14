@@ -9,10 +9,10 @@ import static com.batrom.ing.transactions.TransactionsHelper.*;
 
 class InputJsonParser {
 
-    static Account[] parse(final JsonNode node) {
+    static Account[] parse(final JsonNode transactions) {
         final var accountsMap = new HashMap<String, Account>();
 
-        for (final JsonNode transaction : node) {
+        for (final JsonNode transaction : transactions) {
             final var debitAccountNumber = extractDebitAccount(transaction);
             final var creditAccountNumber = extractCreditAccount(transaction);
             final var amount = extractAmount(transaction);

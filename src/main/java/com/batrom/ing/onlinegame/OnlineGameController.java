@@ -4,5 +4,5 @@ import io.javalin.http.Handler;
 
 public interface OnlineGameController {
     String ENDPOINT = "/onlinegame/calculate";
-    Handler HANDLER = ctx -> ctx.json(PlayersToGroupsAssigner.assign(ctx.bodyAsClass(Players.class)));
+    Handler HANDLER = ctx -> ctx.json(PlayersToGroupsAssigner.assign(ctx.bodyAsClass(OnlineGameInput.class)));
 }
