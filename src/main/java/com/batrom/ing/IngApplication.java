@@ -13,12 +13,15 @@ public class IngApplication {
     private static final int MAX_REQUEST_SIZE = 52_428_800;
     private static final int PORT = 8080;
 
-    public static void main(String[] args) {
-        Javalin.create(IngApplication::config)
+    public static void main(final String[] args) {
+        createJavalinServer().start(PORT);
+    }
+
+    static Javalin createJavalinServer() {
+        return Javalin.create(IngApplication::config)
                 .post(ATMServiceController.ENDPOINT, ATMServiceController.HANDLER)
                 .post(OnlineGameController.ENDPOINT, OnlineGameController.HANDLER)
-                .post(TransactionsController.ENDPOINT, TransactionsController.HANDLER)
-                .start(PORT);
+                .post(TransactionsController.ENDPOINT, TransactionsController.HANDLER);
     }
 
     private static void config(final JavalinConfig config) {
