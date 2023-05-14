@@ -22,14 +22,6 @@ class Groups implements Serializable {
         this.realSize++;
     }
 
-    Group get(final int index) {
-        return this.data[index];
-    }
-
-    int size() {
-        return this.realSize;
-    }
-
     Group[] getData() {
         if (this.realSize < this.data.length) {
             return this.realSize == 0 ? EMPTY : Arrays.copyOf(this.data, this.realSize);
