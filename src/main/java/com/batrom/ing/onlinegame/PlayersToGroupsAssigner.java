@@ -23,6 +23,7 @@ class PlayersToGroupsAssigner {
         clansLoop:
         for (int clanIndex = 1; clanIndex < clans.length; clanIndex++) {
             final var clan = clans[clanIndex];
+            final var numberOfPlayers = clan.numberOfPlayers();
 
             boolean allGroupsAreFullSoFar = true;
             for (int groupIndex = indexOfFirstNonFullGroup; groupIndex < groups.size(); groupIndex++) {
@@ -33,12 +34,13 @@ class PlayersToGroupsAssigner {
                     indexOfFirstNonFullGroup = groupIndex + 1;
                 }
 
-                final var numberOfPlayers = clan.numberOfPlayers();
                 if (group.willFit(numberOfPlayers)) {
                     group.addClan(clan);
 
                     clanSizeCounters[numberOfPlayers] -= 1;
-                    minClanSize = minClanSize(clanSizeCounters, minClanSize);
+                    if (numberOfPlayers == minClanSize) {
+                        minClanSize = minClanSize(clanSizeCounters, minClanSize);
+                    }
 
                     allGroupsAreFullSoFar = allGroupsAreFullSoFar && group.isFull(minClanSize);
                     if (allGroupsAreFullSoFar) {
@@ -53,8 +55,10 @@ class PlayersToGroupsAssigner {
             final var group = Group.of(clan, maxGroupSize);
             groups.add(group);
 
-            clanSizeCounters[clan.numberOfPlayers()] -= 1;
-            minClanSize = minClanSize(clanSizeCounters, minClanSize);
+            clanSizeCounters[numberOfPlayers] -= 1;
+            if (numberOfPlayers == minClanSize) {
+                minClanSize = minClanSize(clanSizeCounters, minClanSize);
+            }
 
             allGroupsAreFullSoFar = allGroupsAreFullSoFar && group.isFull(minClanSize);
             if (allGroupsAreFullSoFar) {
@@ -66,6 +70,10 @@ class PlayersToGroupsAssigner {
     }
 
     private static int minClanSize(final int[] clanSizeCounters, final int currentMinClanSize) {
+        if (clanSizeCounters[currentMinClanSize] > 0) {
+            return currentMinClanSize;
+        }
+
         for (int clanSize = currentMinClanSize; clanSize < clanSizeCounters.length; clanSize++) {
             if (clanSizeCounters[clanSize] > 0) {
                 return clanSize;
