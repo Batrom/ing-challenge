@@ -20,11 +20,13 @@ public class Group implements Serializable {
         this.sizeLeft -= clan.getNumberOfPlayers();
     }
 
-    Clan[] getClans() {
-        return this.clans.getData();
-    }
-
     int getSizeLeft() {
         return sizeLeft;
+    }
+
+    void appendToJson(final StringBuilder builder) {
+        builder.append("[");
+        clans.appendToJson(builder);
+        builder.append("]");
     }
 }

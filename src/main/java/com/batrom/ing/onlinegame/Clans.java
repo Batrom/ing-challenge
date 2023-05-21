@@ -34,4 +34,13 @@ class Clans implements Serializable {
             this.data = Arrays.copyOf(this.data, Math.min(MAX_NUMBER_OF_CLANS, this.realSize + (this.realSize >> 1)));
         }
     }
+
+    void appendToJson(final StringBuilder builder) {
+        for (final Clan clan : data) {
+            if (clan == null) continue;
+            clan.appendToJson(builder);
+            builder.append(",");
+        }
+        builder.setLength(builder.length() - 1);
+    }
 }

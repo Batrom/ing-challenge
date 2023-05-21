@@ -3,51 +3,41 @@ package com.batrom.ing.transactions;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static com.batrom.ing.SerializationHelper.divideByHundredAndRoundToTwoDecimalPlaces;
+
 public class Account implements Serializable {
     private final String account;
     private int debitCount;
     private int creditCount;
-    private double balance;
+    private long balance;
 
-    Account(final String account, final int debitCount, final int creditCount, final double balance) {
+    Account(final String account, final int debitCount, final int creditCount, final long balance) {
         this.account = account;
         this.debitCount = debitCount;
         this.creditCount = creditCount;
         this.balance = balance;
     }
 
-    static Account initializeWithDebit(final String accountNumber, final double balance) {
+    static Account initializeWithDebit(final String accountNumber, final long balance) {
         return new Account(accountNumber, 1, 0, balance);
     }
 
-    static Account initializeWithCredit(final String accountNumber, final double balance) {
+    static Account initializeWithCredit(final String accountNumber, final long balance) {
         return new Account(accountNumber, 0, 1, balance);
     }
 
-    void updateDebit(final double amount) {
+    void updateDebit(final long amount) {
         debitCount++;
         balance += amount;
     }
 
-    void updateCredit(final double amount) {
+    void updateCredit(final long amount) {
         creditCount++;
         balance += amount;
     }
 
     String getAccount() {
         return account;
-    }
-
-    int getDebitCount() {
-        return debitCount;
-    }
-
-    int getCreditCount() {
-        return creditCount;
-    }
-
-    double getBalance() {
-        return balance;
     }
 
     @Override
@@ -61,5 +51,14 @@ public class Account implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(account);
+    }
+
+    public String toJson() {
+        return "{" +
+               "\"account\":\"" + account + "\"," +
+               "\"debitCount\":" + debitCount + "," +
+               "\"creditCount\":" + creditCount + "," +
+               "\"balance\":" + divideByHundredAndRoundToTwoDecimalPlaces(balance) +
+               "}";
     }
 }

@@ -1,12 +1,10 @@
 package com.batrom.ing;
 
-import com.batrom.ing.atmservice.*;
-import com.batrom.ing.onlinegame.*;
-import com.batrom.ing.transactions.*;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.batrom.ing.atmservice.ATMServiceController;
+import com.batrom.ing.onlinegame.OnlineGameController;
+import com.batrom.ing.transactions.TransactionsController;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
-import io.javalin.json.JavalinJackson;
 
 public class IngApplication {
 
@@ -25,22 +23,7 @@ public class IngApplication {
     }
 
     private static void config(final JavalinConfig config) {
-        config.jsonMapper(jacksonConfiguration());
+        config.jsonMapper(new CustomJsonMapper());
         config.http.maxRequestSize = MAX_REQUEST_SIZE;
-    }
-
-    private static JavalinJackson jacksonConfiguration() {
-        return new JavalinJackson().updateMapper(mapper -> mapper.registerModule(moduleWithSerializers()));
-    }
-
-    private static SimpleModule moduleWithSerializers() {
-        final var module = new SimpleModule();
-        module.addDeserializer(ATMServiceInput.class, new ATMServiceInputDeserializer());
-        module.addDeserializer(TransactionsInput.class, new TransactionsInputDeserializer());
-        module.addDeserializer(OnlineGameInput.class, new OnlineGameInputDeserializer());
-        module.addSerializer(ATM[].class, new ATMsSerializer());
-        module.addSerializer(Account[].class, new AccountsSerializer());
-        module.addSerializer(Group[].class, new GroupsSerializer());
-        return module;
     }
 }
