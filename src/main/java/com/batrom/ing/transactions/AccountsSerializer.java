@@ -1,24 +1,15 @@
 package com.batrom.ing.transactions;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+public class AccountsSerializer {
 
-import java.io.IOException;
+    public static String serialize(final Account[] accounts) {
+        if (accounts.length == 0) return "[]";
 
-public class AccountsSerializer extends JsonSerializer<Account[]> {
-
-    @Override
-    public void serialize(final Account[] accounts, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeStartArray();
+        final var builder = new StringBuilder("[");
         for (final Account account : accounts) {
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("account", account.getAccount());
-            jsonGenerator.writeNumberField("debitCount", account.getDebitCount());
-            jsonGenerator.writeNumberField("creditCount", account.getCreditCount());
-            jsonGenerator.writeNumberField("balance", account.getBalance());
-            jsonGenerator.writeEndObject();
+            builder.append(account.toJson()).append(",");
         }
-        jsonGenerator.writeEndArray();
+        builder.setLength(builder.length() - 1);
+        return builder.append("]").toString();
     }
 }

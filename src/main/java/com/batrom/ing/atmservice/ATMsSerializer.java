@@ -1,22 +1,16 @@
 package com.batrom.ing.atmservice;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+public class ATMsSerializer {
 
-import java.io.IOException;
+    public static String serialize(final ATM[] atms) {
+        if (atms.length == 0) return "[]";
 
-public class ATMsSerializer extends JsonSerializer<ATM[]> {
-
-    @Override
-    public void serialize(final ATM[] atms, final JsonGenerator jsonGenerator, final SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeStartArray();
+        final var builder = new StringBuilder("[");
         for (final ATM atm : atms) {
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeNumberField("region", atm.region());
-            jsonGenerator.writeNumberField("atmId", atm.atmId());
-            jsonGenerator.writeEndObject();
+            atm.appendToJson(builder);
+            builder.append(",");
         }
-        jsonGenerator.writeEndArray();
+        builder.setLength(builder.length() - 1);
+        return builder.append("]").toString();
     }
 }

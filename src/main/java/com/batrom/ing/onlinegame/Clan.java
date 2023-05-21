@@ -27,4 +27,11 @@ class Clan implements Serializable {
     int getPoints() {
         return points;
     }
+
+    void appendToJson(final StringBuilder builder) {
+        builder.append("{")
+                .append("\"numberOfPlayers\":").append(numberOfPlayers).append(",")
+                .append("\"points\":").append(points)
+                .append("}");
+    }
 }
