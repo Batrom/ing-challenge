@@ -61,11 +61,11 @@ public class TransactionsInputJsonDeserializer {
                     if (dotCharacter == DOT) {
                         final var tenthsDigit = chars[++jsonPointer];
                         if (isDigit(tenthsDigit)) {
-                            amount += Character.getNumericValue(tenthsDigit) * 10L;
+                            amount += toNumber(tenthsDigit) * 10L;
 
                             final var hundredthsDigit = chars[++jsonPointer];
                             if (isDigit(hundredthsDigit)) {
-                                amount += Character.getNumericValue(hundredthsDigit);
+                                amount += toNumber(hundredthsDigit);
 
                                 final var thousandthsDigit = chars[++jsonPointer];
                                 // round up if digit at thousandths decimal place is greater or equal to 5
@@ -86,7 +86,7 @@ public class TransactionsInputJsonDeserializer {
 
                     // create number that is multiplied by 100 - to get rid of decimal places
                     for (int digitPositon = 2, numberIndex = endNumberIndex; digitPositon < numberLength; digitPositon++, numberIndex--) {
-                        amount += POWERS_OF_TEN_AS_LONGS[digitPositon] * Character.getNumericValue(chars[numberIndex]);
+                        amount += POWERS_OF_TEN_AS_LONGS[digitPositon] * toNumber(chars[numberIndex]);
                     }
                 }
                 character = chars[++jsonPointer];

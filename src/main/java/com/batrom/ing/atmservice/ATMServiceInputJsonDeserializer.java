@@ -48,7 +48,7 @@ public class ATMServiceInputJsonDeserializer {
 
                     // create number that is multiplied by 100 - to get rid of decimal places
                     for (int digitPositon = 0, numberIndex = endNumberIndex; digitPositon < numberLength; digitPositon++, numberIndex--) {
-                        atmId += POWERS_OF_TEN_AS_INTS[digitPositon] * Character.getNumericValue(chars[numberIndex]);
+                        atmId += POWERS_OF_TEN_AS_INTS[digitPositon] * toNumber(chars[numberIndex]);
                     }
                 } else if (character == LOWER_R) {
                     final var thirdLetter = chars[jsonPointer + 2];
@@ -98,7 +98,7 @@ public class ATMServiceInputJsonDeserializer {
 
                         // create number that is multiplied by 100 - to get rid of decimal places
                         for (int digitPositon = 0, numberIndex = endNumberIndex; digitPositon < numberLength; digitPositon++, numberIndex--) {
-                            region += POWERS_OF_TEN_AS_INTS[digitPositon] * Character.getNumericValue(chars[numberIndex]);
+                            region += POWERS_OF_TEN_AS_INTS[digitPositon] * toNumber(chars[numberIndex]);
                         }
                     }
                 }
