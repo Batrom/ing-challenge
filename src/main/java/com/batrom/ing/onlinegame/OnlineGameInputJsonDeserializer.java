@@ -37,7 +37,7 @@ public class OnlineGameInputJsonDeserializer {
                 final var numberLength = endNumberIndex - startNumberIndex + 1;
 
                 for (int digitPositon = 0, numberIndex = endNumberIndex; digitPositon < numberLength; digitPositon++, numberIndex--) {
-                    groupCount += POWERS_OF_TEN[digitPositon] * Character.getNumericValue(chars[numberIndex]);
+                    groupCount += POWERS_OF_TEN_AS_INTS[digitPositon] * Character.getNumericValue(chars[numberIndex]);
                 }
             } else if (character == LOWER_C) {
                 // skip 'clans":' sentence
@@ -76,7 +76,7 @@ public class OnlineGameInputJsonDeserializer {
                             final var numberLength = endNumberIndex - startNumberIndex + 1;
 
                             for (int digitPositon = 0, numberIndex = endNumberIndex; digitPositon < numberLength; digitPositon++, numberIndex--) {
-                                numberOfPlayers += POWERS_OF_TEN[digitPositon] * Character.getNumericValue(chars[numberIndex]);
+                                numberOfPlayers += POWERS_OF_TEN_AS_INTS[digitPositon] * Character.getNumericValue(chars[numberIndex]);
                             }
                         } else if (characterInsideClans == LOWER_P) {
                             // skip 'points":' sentence
@@ -94,7 +94,7 @@ public class OnlineGameInputJsonDeserializer {
                             final var numberLength = endNumberIndex - startNumberIndex + 1;
 
                             for (int digitPositon = 0, numberIndex = endNumberIndex; digitPositon < numberLength; digitPositon++, numberIndex--) {
-                                points += POWERS_OF_TEN[digitPositon] * Character.getNumericValue(chars[numberIndex]);
+                                points += POWERS_OF_TEN_AS_INTS[digitPositon] * Character.getNumericValue(chars[numberIndex]);
                             }
                         }
                         characterInsideClans = chars[++jsonPointer];
