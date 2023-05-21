@@ -86,7 +86,7 @@ public class TransactionsInputJsonDeserializer {
 
                     // create number that is multiplied by 100 - to get rid of decimal places
                     for (int digitPositon = 2, numberIndex = endNumberIndex; digitPositon < numberLength; digitPositon++, numberIndex--) {
-                        amount += POWERS_OF_TEN[digitPositon] * Character.getNumericValue(chars[numberIndex]);
+                        amount += POWERS_OF_TEN_AS_LONGS[digitPositon] * Character.getNumericValue(chars[numberIndex]);
                     }
                 }
                 character = chars[++jsonPointer];

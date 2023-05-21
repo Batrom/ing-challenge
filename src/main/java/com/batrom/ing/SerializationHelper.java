@@ -22,7 +22,7 @@ public class SerializationHelper {
     public static final char LOWER_A = 'a';
     public static final char LOWER_D = 'd';
 
-    public static final long[] POWERS_OF_TEN = {
+    public static final long[] POWERS_OF_TEN_AS_LONGS = {
             1L,
             10L,
             100L,
@@ -39,6 +39,18 @@ public class SerializationHelper {
             10_000_000_000_000L,
             100_000_000_000_000L,
             1_000_000_000_000_000L};
+
+    public static final int[] POWERS_OF_TEN_AS_INTS = {
+            1,
+            10,
+            100,
+            1_000,
+            10_000,
+            100_000,
+            1_000_000,
+            10_000_000,
+            100_000_000,
+            1_000_000_000};
 
     public static int skipUntilEndOfNumberReached(final char[] chars, int jsonPointer) {
         while (isDigit(chars[jsonPointer])) {
